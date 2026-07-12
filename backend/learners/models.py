@@ -25,7 +25,8 @@ class Learner(models.Model):
         blank=True,
         help_text="Exact DOB or estimated age, since many learners lack birth records.",
     )
-    guardian_info = models.CharField(max_length=255, blank=True)
+    parent_name = models.CharField(max_length=255, blank=True)
+    parent_contact = models.CharField(max_length=100, blank=True)
     place_of_origin = models.CharField(max_length=255, blank=True)
 
     created_by = models.ForeignKey(
