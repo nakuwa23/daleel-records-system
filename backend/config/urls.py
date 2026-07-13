@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from records.views import issue_record
 
 from learners.views import LearnerViewSet
 
@@ -17,4 +18,5 @@ urlpatterns = [
 
     # Domain APIs
     path("api/", include(router.urls)),
+    path("api/records/issue/", issue_record, name="issue_record"),
 ]
