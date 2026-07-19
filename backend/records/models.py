@@ -11,6 +11,7 @@ class RecordStatus(models.TextChoices):
 class CompletionOutcome(models.TextChoices):
     PASSED = "PASSED", "Passed"
     PROMOTED = "PROMOTED", "Promoted"
+    FAILED = "FAILED", "Failed"
     OTHER = "OTHER", "Other"
 
 
