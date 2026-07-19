@@ -26,3 +26,33 @@ export function logout() {
   localStorage.removeItem("daleel_access");
   localStorage.removeItem("daleel_refresh");
 }
+
+
+// --- Learners ---
+
+export async function createLearner(learnerData) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/learners/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(learnerData),
+  });
+
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new Error(detail.detail || "Could not register learner");
+  }
+  return res.json();
+}
+
+export async function getLearners() {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/learners/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Could not load learners");
+  return res.json();
+}
