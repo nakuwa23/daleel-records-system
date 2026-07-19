@@ -65,3 +65,24 @@ export async function getLearner(learnerId) {
   if (!res.ok) throw new Error("Could not load learner");
   return res.json();
 }
+
+
+// --- Records ---
+
+export async function issueRecord(recordData) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/records/issue/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(recordData),
+  });
+
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new Error(detail.detail || "Could not issue record");
+  }
+  return res.json();
+}
