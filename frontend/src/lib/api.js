@@ -56,3 +56,12 @@ export async function getLearners() {
   if (!res.ok) throw new Error("Could not load learners");
   return res.json();
 }
+
+export async function getLearner(learnerId) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/learners/${learnerId}/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Could not load learner");
+  return res.json();
+}
