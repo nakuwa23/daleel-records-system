@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from learners.models import Learner
+from .models import AcademicRecord
 from .serializers import IssueRecordSerializer, AcademicRecordSerializer
 from .services import issue_signed_record, build_qr_payload
 
@@ -43,3 +44,25 @@ def issue_record(request):
         },
         status=status.HTTP_201_CREATED,
     )
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def record_detail(request, record_id):
+    """Fetch one record with its QR payload, for presentation."""
+    try:
+        record = AcademicRecord.objects.get(pk=record_id)
+    except AcademicRecord.DoesNotExist:
+        return Response({"detail": "Record not found."}, status=404)
+
+    return Response({
+        "record": AcademicRecordSerializer(record).data,
+        "qr_payload": build_qr_payload(record),
+    })
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def learner_records(request, learner_id):
+    """List all records for a given learner (their academic history)."""
+    records = AcademicRecord.objects.filter(learner_id=learner_id).order_by("-issued_at")
+    return Response(AcademicRecordSerializer(records, many=True).data)
