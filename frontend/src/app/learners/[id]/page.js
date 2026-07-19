@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getAccessToken, getLearner } from "@/lib/api";
+import { getAccessToken, getLearner, getLearnerRecords } from "@/lib/api";
 
 export default function LearnerDetailPage() {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function LearnerDetailPage() {
 
   const [ready, setReady] = useState(false);
   const [learner, setLearner] = useState(null);
+  const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -24,6 +25,9 @@ export default function LearnerDetailPage() {
       .then(setLearner)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+    getLearnerRecords(learnerId)
+      .then((data) => setRecords(Array.isArray(data) ? data : data.results || []))
+      .catch(() => {});
   }, [router, learnerId]);
 
   if (!ready) return null;
@@ -74,6 +78,32 @@ export default function LearnerDetailPage() {
               >
                 Issue a record
               </button>
+            </div>
+
+            <div className="mt-8">
+              <h2 className="text-lg font-semibold text-ink mb-3">Academic records</h2>
+              {records.length === 0 ? (
+                <p className="text-slate text-sm">No records issued yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {records.map((r) => (
+                    <button
+                      key={r.record_id}
+                      onClick={() => router.push(`/records/${r.record_id}`)}
+                      className="w-full text-left bg-surface border border-border-warm rounded-xl p-4 hover:border-teal-primary transition-colors flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium text-ink">{r.level_completed} · {r.academic_year}</p>
+                        <p className="text-sm text-slate">
+                          {r.completion_outcome.charAt(0) + r.completion_outcome.slice(1).toLowerCase()}
+                          {" · "}{r.status}
+                        </p>
+                      </div>
+                      <span className="text-teal-primary text-sm">Present →</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </>
         )}
