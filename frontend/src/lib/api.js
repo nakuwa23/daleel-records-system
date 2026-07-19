@@ -86,3 +86,21 @@ export async function issueRecord(recordData) {
   }
   return res.json();
 }
+
+export async function getLearnerRecords(learnerId) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/learners/${learnerId}/records/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Could not load records");
+  return res.json();
+}
+
+export async function getRecord(recordId) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/records/${recordId}/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Could not load record");
+  return res.json();
+}
