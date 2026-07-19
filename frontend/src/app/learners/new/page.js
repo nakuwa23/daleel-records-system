@@ -17,6 +17,7 @@ export default function NewLearnerPage() {
   });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [ageMode, setAgeMode] = useState("estimate");
 
   useEffect(() => {
     if (!getAccessToken()) router.replace("/login");
@@ -71,14 +72,50 @@ export default function NewLearnerPage() {
             className="w-full border border-border-warm rounded-lg px-3 py-2 mb-4 text-ink focus:outline-none focus:border-teal-primary"
           />
 
-          <label className="block text-sm text-slate mb-1">Date or estimated age</label>
-          <input
-            type="text"
-            value={form.date_or_estimated_age}
-            onChange={(e) => update("date_or_estimated_age", e.target.value)}
-            placeholder="e.g. 2013 or ~11"
-            className="w-full border border-border-warm rounded-lg px-3 py-2 mb-4 text-ink focus:outline-none focus:border-teal-primary"
-          />
+          <label className="block text-sm text-slate mb-1">Date of birth or estimated age</label>
+
+          <div className="flex gap-2 mb-3">
+            <button
+              type="button"
+              onClick={() => { setAgeMode("exact"); update("date_or_estimated_age", ""); }}
+              className={`flex-1 text-sm py-2 rounded-lg border transition-colors ${
+                ageMode === "exact"
+                  ? "bg-teal-primary text-white border-teal-primary"
+                  : "bg-surface text-slate border-border-warm"
+              }`}
+            >
+              Exact date
+            </button>
+            <button
+              type="button"
+              onClick={() => { setAgeMode("estimate"); update("date_or_estimated_age", ""); }}
+              className={`flex-1 text-sm py-2 rounded-lg border transition-colors ${
+                ageMode === "estimate"
+                  ? "bg-teal-primary text-white border-teal-primary"
+                  : "bg-surface text-slate border-border-warm"
+              }`}
+            >
+              Estimated age
+            </button>
+          </div>
+
+          {ageMode === "exact" ? (
+            <input
+              type="date"
+              value={form.date_or_estimated_age}
+              onChange={(e) => update("date_or_estimated_age", e.target.value)}
+              className="w-full border border-border-warm rounded-lg px-3 py-2 mb-1 text-ink focus:outline-none focus:border-teal-primary"
+            />
+          ) : (
+            <input
+              type="text"
+              value={form.date_or_estimated_age}
+              onChange={(e) => update("date_or_estimated_age", e.target.value)}
+              placeholder="e.g. ~12 years, or approx. 2013"
+              className="w-full border border-border-warm rounded-lg px-3 py-2 mb-1 text-ink focus:outline-none focus:border-teal-primary"
+            />
+          )}
+          <p className="text-xs text-slate mb-4">Use an exact date if known, or an estimate if not.</p>
 
           <label className="block text-sm text-slate mb-1">Parent name</label>
           <input
