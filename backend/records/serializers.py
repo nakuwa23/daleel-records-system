@@ -9,7 +9,7 @@ class IssueRecordSerializer(serializers.Serializer):
     academic_year = serializers.CharField(max_length=20)
     subject_results = serializers.JSONField()
     completion_outcome = serializers.ChoiceField(
-        choices=["PASSED", "PROMOTED", "OTHER"], default="PROMOTED"
+        choices=["PASSED", "PROMOTED", "FAILED", "OTHER"], default="PROMOTED"
     )
 
 
