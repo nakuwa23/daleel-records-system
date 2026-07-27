@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getAccessToken, getLearner, getLearnerRecords } from "@/lib/api";
+import AppHeader from "@/components/AppHeader";
 
 export default function LearnerDetailPage() {
   const router = useRouter();
@@ -34,12 +35,7 @@ export default function LearnerDetailPage() {
 
   return (
     <div className="min-h-screen bg-sand">
-      <header className="bg-teal-primary px-6 py-4 flex items-center gap-3">
-        <button onClick={() => router.push("/learners")} className="text-teal-tint hover:text-white">
-          ←
-        </button>
-        <span className="text-xl font-semibold text-white">Learner profile</span>
-      </header>
+      <AppHeader />
 
       <main className="max-w-2xl mx-auto px-6 py-8">
         {loading && <p className="text-slate">Loading...</p>}
