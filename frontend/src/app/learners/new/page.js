@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken, createLearner } from "@/lib/api";
+import AppHeader from "@/components/AppHeader";
 
 export default function NewLearnerPage() {
   const router = useRouter();
@@ -46,12 +47,7 @@ export default function NewLearnerPage() {
 
   return (
     <div className="min-h-screen bg-sand">
-      <header className="bg-teal-primary px-6 py-4 flex items-center gap-3">
-        <button onClick={() => router.push("/dashboard")} className="text-teal-tint hover:text-white">
-          ←
-        </button>
-        <span className="text-xl font-semibold text-white">Register learner</span>
-      </header>
+      <AppHeader />
 
       <main className="max-w-lg mx-auto px-6 py-8">
         <form onSubmit={handleSubmit} className="bg-surface border border-border-warm rounded-2xl p-6">
