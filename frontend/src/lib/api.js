@@ -104,3 +104,17 @@ export async function getRecord(recordId) {
   if (!res.ok) throw new Error("Could not load record");
   return res.json();
 }
+
+export async function verifyRecord(qrPayload) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/verify/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ qr_payload: qrPayload }),
+  });
+  if (!res.ok) throw new Error("Verification request failed");
+  return res.json();
+}
