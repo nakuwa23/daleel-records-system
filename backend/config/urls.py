@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from records.views import issue_record
 from records.views import issue_record, record_detail, learner_records
+from verification.views import verify_record
 
 from learners.views import LearnerViewSet
 
@@ -20,7 +21,7 @@ urlpatterns = [
     # Domain APIs
     path("api/", include(router.urls)),
     path("api/records/issue/", issue_record, name="issue_record"),
-
+    path("api/verify/", verify_record, name="verify_record"),
     path("api/records/<uuid:record_id>/", record_detail, name="record_detail"),
     path("api/learners/<uuid:learner_id>/records/", learner_records, name="learner_records"),
 ]
