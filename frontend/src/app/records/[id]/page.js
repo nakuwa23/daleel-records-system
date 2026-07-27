@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { getAccessToken, getRecord } from "@/lib/api";
+import AppHeader from "@/components/AppHeader";
 
 export default function RecordPresentPage() {
   const router = useRouter();
@@ -36,10 +37,7 @@ export default function RecordPresentPage() {
 
   return (
     <div className="min-h-screen bg-sand">
-      <header className="bg-teal-primary px-6 py-4 flex items-center gap-3">
-        <button onClick={() => router.back()} className="text-teal-tint hover:text-white">←</button>
-        <span className="text-xl font-semibold text-white">Present record</span>
-      </header>
+      <AppHeader />
 
       <main className="max-w-md mx-auto px-6 py-8">
         {loading && <p className="text-slate">Loading...</p>}
