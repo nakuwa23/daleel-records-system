@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken, getLearners } from "@/lib/api";
+import AppHeader from "@/components/AppHeader";
 
 export default function LearnersPage() {
   const router = useRouter();
@@ -33,18 +34,16 @@ export default function LearnersPage() {
 
   return (
     <div className="min-h-screen bg-sand">
-      <header className="bg-teal-primary px-6 py-4 flex items-center gap-3">
-        <button onClick={() => router.push("/dashboard")} className="text-teal-tint hover:text-white">
-          ←
-        </button>
-        <span className="text-xl font-semibold text-white flex-1">Learners</span>
-        <button
-          onClick={() => router.push("/learners/new")}
-          className="bg-amber-accent text-ink text-sm font-medium px-4 py-2 rounded-lg hover:bg-amber-hover transition-colors"
-        >
-          + Register
-        </button>
-      </header>
+      <AppHeader
+        actions={
+          <button
+            onClick={() => router.push("/learners/new")}
+            className="bg-amber-accent text-ink text-sm font-medium px-4 py-2 rounded-lg hover:bg-amber-hover transition-colors"
+          >
+            + Register
+          </button>
+        }
+      />
 
       <main className="max-w-3xl mx-auto px-6 py-8">
         <input
