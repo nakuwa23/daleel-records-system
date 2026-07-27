@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
 import { getAccessToken, verifyRecord } from "@/lib/api";
+import AppHeader from "@/components/AppHeader";
 
 export default function VerifyPage() {
   const router = useRouter();
@@ -83,10 +84,7 @@ export default function VerifyPage() {
 
   return (
     <div className="min-h-screen bg-sand">
-      <header className="bg-teal-primary px-6 py-4 flex items-center gap-3">
-        <button onClick={() => router.push("/dashboard")} className="text-teal-tint hover:text-white">←</button>
-        <span className="text-xl font-semibold text-white">Verify a record</span>
-      </header>
+      <AppHeader />
 
       <main className="max-w-md mx-auto px-6 py-8">
         {/* Result display */}
