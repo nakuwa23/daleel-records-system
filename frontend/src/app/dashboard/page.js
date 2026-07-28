@@ -39,7 +39,6 @@ export default function DashboardPage() {
 
   if (!ready) return null;
 
-  // Fall back to the full set for unknown/missing roles (e.g. a session from before roles existed).
   const actions = ACTIONS_BY_ROLE[role] || [REGISTER_LEARNER, ISSUE_RECORD, VERIFY_RECORD, LEARNERS];
 
   return (
