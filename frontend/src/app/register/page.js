@@ -53,15 +53,18 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-sand px-4 py-10">
-      <div className="w-full max-w-sm bg-surface rounded-2xl border border-border-warm p-8">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg bg-amber-accent flex items-center justify-center text-lg font-semibold text-ink">
+    <div className="min-h-screen flex flex-col bg-sand">
+      <nav className="bg-teal-primary px-6 md:px-10 py-4">
+        <Link href="/" className="inline-flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-amber-accent flex items-center justify-center text-ink font-semibold">
             D
           </div>
-          <span className="text-2xl font-semibold text-ink">Daleel</span>
-        </div>
+          <span className="text-xl font-semibold text-white">Daleel</span>
+        </Link>
+      </nav>
 
+      <div className="flex-1 flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-sm bg-surface rounded-2xl border border-border-warm p-8">
         <h1 className="text-xl font-semibold text-ink mb-1">Create an account</h1>
         <p className="text-sm text-slate mb-6">Set up staff access for your institution</p>
 
@@ -192,6 +195,7 @@ export default function RegisterPage() {
             Sign in
           </Link>
         </p>
+        </div>
       </div>
     </div>
   );
