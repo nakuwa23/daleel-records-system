@@ -30,6 +30,13 @@ export default function AppHeader({ onBack, actions }) {
         </button>
       )}
 
+      <Link href="/dashboard" className="flex items-center gap-2 mr-4">
+        <div className="w-7 h-7 rounded-lg bg-amber-accent flex items-center justify-center text-sm font-semibold text-ink">
+          D
+        </div>
+        <span className="text-lg font-semibold text-white">Daleel</span>
+      </Link>
+
       <nav className="flex gap-1 flex-1">
         {navLinks.map((link) => {
           const active =
