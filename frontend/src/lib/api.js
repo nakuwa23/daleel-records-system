@@ -15,6 +15,8 @@ export async function login(username, password) {
   // Store tokens so other screens can use them.
   localStorage.setItem("daleel_access", data.access);
   localStorage.setItem("daleel_refresh", data.refresh);
+  localStorage.setItem("daleel_role", data.role || "");
+  localStorage.setItem("daleel_is_superuser", data.is_superuser ? "1" : "");
   return data;
 }
 
@@ -22,9 +24,62 @@ export function getAccessToken() {
   return localStorage.getItem("daleel_access");
 }
 
+export function getRole() {
+  return localStorage.getItem("daleel_role") || "";
+}
+
+export function getIsSuperuser() {
+  return localStorage.getItem("daleel_is_superuser") === "1";
+}
+
+export function isAdmin() {
+  return getRole() === "ADMINISTRATOR" || getIsSuperuser();
+}
+
 export function logout() {
   localStorage.removeItem("daleel_access");
   localStorage.removeItem("daleel_refresh");
+  localStorage.removeItem("daleel_role");
+  localStorage.removeItem("daleel_is_superuser");
+}
+
+export async function getInstitutions() {
+  const res = await fetch(`${API_BASE}/api/institutions/`);
+  if (!res.ok) throw new Error("Could not load institutions");
+  return res.json();
+}
+
+export async function register(payload) {
+  const res = await fetch(`${API_BASE}/api/auth/register/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    const message = Object.values(data).flat().join(" ") || "Could not register";
+    throw new Error(message);
+  }
+
+  localStorage.setItem("daleel_access", data.access);
+  localStorage.setItem("daleel_refresh", data.refresh);
+  localStorage.setItem("daleel_role", data.role || "");
+  localStorage.setItem("daleel_is_superuser", data.is_superuser ? "1" : "");
+  return data;
+}
+
+export async function getAnalytics() {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/analytics/summary/`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new Error(detail.detail || "Could not load analytics");
+  }
+  return res.json();
 }
 
 
