@@ -7,13 +7,20 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-sand">
       {/* Nav */}
-      <nav className="bg-white px-6 md:px-10 py-4 flex items-center justify-between border-b border-border-warm">
-        <div className="flex items-center gap-2.5">
+      <nav className="sticky top-0 z-50 bg-white px-6 md:px-10 py-4 flex items-center justify-between border-b border-border-warm">
+        <Link
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="flex items-center gap-2.5"
+        >
           <div className="w-9 h-9 rounded-lg bg-teal-primary flex items-center justify-center text-white font-semibold">
             D
           </div>
           <span className="text-xl font-semibold text-ink">Daleel</span>
-        </div>
+        </Link>
         <div className="hidden md:flex items-center gap-8">
           <a href="#how" className="text-sm text-slate hover:text-ink">How it works</a>
           <a href="#why" className="text-sm text-slate hover:text-ink">Why Daleel</a>
