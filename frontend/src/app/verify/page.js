@@ -170,33 +170,35 @@ export default function VerifyPage() {
                 </div>
               </dl>
 
-              <table className="w-full text-sm border border-border-warm rounded-xl overflow-hidden">
-                <thead>
-                  <tr className="text-left bg-sand text-slate">
-                    <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide">
-                      Subject
-                    </th>
-                    <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide text-right">
-                      Score
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(result.record.subjectResults || {}).map(
-                    ([subject, score], i) => (
-                      <tr
-                        key={subject}
-                        className={`border-t border-border-warm ${i % 2 ? "bg-sand/40" : "bg-surface"}`}
-                      >
-                        <td className="py-2.5 px-4 text-ink">{subject}</td>
-                        <td className="py-2.5 px-4 text-ink text-right font-semibold tabular-nums">
-                          {score}
-                        </td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto rounded-xl border border-border-warm">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left bg-sand text-slate">
+                      <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide">
+                        Subject
+                      </th>
+                      <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide text-right">
+                        Score
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(result.record.subjectResults || {}).map(
+                      ([subject, score], i) => (
+                        <tr
+                          key={subject}
+                          className={`border-t border-border-warm ${i % 2 ? "bg-sand/40" : "bg-surface"}`}
+                        >
+                          <td className="py-2.5 px-4 text-ink whitespace-nowrap">{subject}</td>
+                          <td className="py-2.5 px-4 text-ink text-right font-semibold tabular-nums">
+                            {score}
+                          </td>
+                        </tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <p className="flex items-center gap-1.5 text-xs text-slate px-6 py-4">
