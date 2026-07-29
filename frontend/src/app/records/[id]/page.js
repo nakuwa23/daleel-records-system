@@ -39,7 +39,7 @@ export default function RecordPresentPage() {
     <div className="min-h-screen bg-sand">
       <AppHeader />
 
-      <main className="max-w-md mx-auto px-6 py-8">
+      <main className="max-w-md mx-auto px-4 sm:px-6 py-8">
         {loading && <p className="text-slate">Loading...</p>}
 
         {error && (
@@ -49,15 +49,15 @@ export default function RecordPresentPage() {
         )}
 
         {record && qrPayload && (
-          <div className="bg-surface border border-border-warm rounded-2xl p-6 text-center">
+          <div className="bg-surface border border-border-warm rounded-2xl p-4 sm:p-6 text-center">
             <p className="text-sm text-slate mb-1">Show this code to the receiving school</p>
             <h1 className="text-lg font-semibold text-ink mb-6">
               {record.level_completed} · {record.academic_year}
             </h1>
 
             <div className="flex justify-center mb-6">
-              <div className="bg-white p-4 rounded-xl border border-border-warm">
-                <QRCodeSVG value={qrValue} size={220} level="M" />
+              <div className="bg-white p-3 sm:p-4 rounded-xl border border-border-warm max-w-full">
+                <QRCodeSVG value={qrValue} size={200} level="M" className="max-w-full h-auto" />
               </div>
             </div>
 
