@@ -15,7 +15,7 @@ def verify_record(request):
 
     verifier = getattr(request.user, "institution", None)
     is_authentic, detail, extra = verify_presented_record(
-        qr_payload, verifier=verifier, mode=VerificationMode.ONLINE
+        qr_payload, verifier=verifier, mode=VerificationMode.ONLINE, request=request
     )
     response = {"authentic": is_authentic, "detail": detail}
     if extra:
