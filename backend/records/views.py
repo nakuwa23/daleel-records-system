@@ -49,8 +49,9 @@ def issue_record(request):
 @permission_classes([IsAuthenticated])
 def record_detail(request, record_id):
     """Fetch one record with its QR payload, for presentation."""
+    institution = getattr(request.user, "institution", None)
     try:
-        record = AcademicRecord.objects.get(pk=record_id)
+        record = AcademicRecord.objects.get(pk=record_id, issuer=institution)
     except AcademicRecord.DoesNotExist:
         return Response({"detail": "Record not found."}, status=404)
 
