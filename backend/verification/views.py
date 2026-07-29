@@ -14,7 +14,10 @@ def verify_record(request):
         return Response({"detail": "qr_payload is required."}, status=400)
 
     verifier = getattr(request.user, "institution", None)
-    is_authentic, detail = verify_presented_record(
+    is_authentic, detail, extra = verify_presented_record(
         qr_payload, verifier=verifier, mode=VerificationMode.ONLINE
     )
-    return Response({"authentic": is_authentic, "detail": detail})
+    response = {"authentic": is_authentic, "detail": detail}
+    if extra:
+        response.update(extra)
+    return Response(response)
