@@ -133,6 +133,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# User-uploaded files (learner photographs)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Daleel configuration
 AUTH_USER_MODEL = "accounts.User"
 
