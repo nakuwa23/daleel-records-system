@@ -133,7 +133,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# User-uploaded files (learner photographs)
+# Learner-uploaded photographs
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
