@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAccessToken, issueRecord, getLearner } from "@/lib/api";
 import AppHeader from "@/components/AppHeader";
 
 export default function NewRecordPage() {
+  return (
+    <Suspense fallback={null}>
+      <NewRecordForm />
+    </Suspense>
+  );
+}
+
+function NewRecordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const learnerId = searchParams.get("learner");

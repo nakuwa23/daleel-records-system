@@ -21,7 +21,7 @@ class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Institution
-        fields = ["institution_id", "name", "location"]
+        fields = ["institution_id", "name", "location", "public_key"]
 
 
 class RegisterSerializer(serializers.Serializer):
