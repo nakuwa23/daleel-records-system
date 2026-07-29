@@ -134,8 +134,16 @@ export default function VerifyPage() {
 
             <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-4 bg-sand/60 border-b border-border-warm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 shrink-0 rounded-full bg-teal-tint text-teal-primary flex items-center justify-center text-lg">
-                  ✓
+                <div className="w-10 h-10 shrink-0 rounded-full bg-teal-tint text-teal-primary flex items-center justify-center text-lg overflow-hidden">
+                  {result.learner_photo ? (
+                    <img
+                      src={result.learner_photo}
+                      alt={result.learner_name || "Learner"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    "✓"
+                  )}
                 </div>
                 <div>
                   <p className="text-xs text-slate uppercase tracking-wide">Academic report</p>
