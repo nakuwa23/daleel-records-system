@@ -6,6 +6,13 @@ import { Html5Qrcode } from "html5-qrcode";
 import { getAccessToken, verifyRecord } from "@/lib/api";
 import AppHeader from "@/components/AppHeader";
 
+const OUTCOME_STYLES = {
+  PROMOTED: "bg-status-authentic-tint text-status-authentic",
+  PASSED: "bg-status-authentic-tint text-status-authentic",
+  FAILED: "bg-status-invalid-tint text-status-invalid",
+  OTHER: "bg-status-offline-tint text-status-offline",
+};
+
 export default function VerifyPage() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
@@ -117,6 +124,85 @@ export default function VerifyPage() {
             >
               Verify another
             </button>
+          </div>
+        )}
+
+        {/* Report card: only rendered for a signature-verified record */}
+        {result?.authentic && result.record && (
+          <div className="bg-surface border border-border-warm rounded-2xl overflow-hidden mb-6 shadow-sm">
+            <div className="h-1.5 bg-teal-primary" />
+
+            <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-4 bg-sand/60 border-b border-border-warm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 shrink-0 rounded-full bg-teal-tint text-teal-primary flex items-center justify-center text-lg">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs text-slate uppercase tracking-wide">Academic report</p>
+                  <h3 className="text-lg font-semibold text-ink">
+                    {result.record.levelCompleted} · {result.record.academicYear}
+                  </h3>
+                </div>
+              </div>
+              <span
+                className={`text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${
+                  OUTCOME_STYLES[result.record.completionOutcome] ||
+                  "bg-teal-tint text-teal-primary"
+                }`}
+              >
+                {result.record.completionOutcome}
+              </span>
+            </div>
+
+            <div className="px-6 pt-5">
+              <dl className="grid grid-cols-2 gap-3 mb-5 bg-sand rounded-xl p-4 text-sm">
+                <div>
+                  <dt className="text-xs text-slate uppercase tracking-wide mb-0.5">Learner</dt>
+                  <dd className="text-ink font-medium">
+                    {result.learner_name || result.record.learnerId}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs text-slate uppercase tracking-wide mb-0.5">
+                    Issuing institution
+                  </dt>
+                  <dd className="text-ink font-medium">{result.issuer_name || "—"}</dd>
+                </div>
+              </dl>
+
+              <table className="w-full text-sm border border-border-warm rounded-xl overflow-hidden">
+                <thead>
+                  <tr className="text-left bg-sand text-slate">
+                    <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide">
+                      Subject
+                    </th>
+                    <th className="py-2.5 px-4 font-medium text-xs uppercase tracking-wide text-right">
+                      Score
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(result.record.subjectResults || {}).map(
+                    ([subject, score], i) => (
+                      <tr
+                        key={subject}
+                        className={`border-t border-border-warm ${i % 2 ? "bg-sand/40" : "bg-surface"}`}
+                      >
+                        <td className="py-2.5 px-4 text-ink">{subject}</td>
+                        <td className="py-2.5 px-4 text-ink text-right font-semibold tabular-nums">
+                          {score}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="flex items-center gap-1.5 text-xs text-slate px-6 py-4">
+              <span className="text-teal-primary">✓</span>
+              Verified against the issuing institution&apos;s digital signature
+            </p>
           </div>
         )}
 
