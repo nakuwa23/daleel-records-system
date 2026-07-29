@@ -85,15 +85,20 @@ export async function getAnalytics() {
 
 // --- Learners ---
 
-export async function createLearner(learnerData) {
+export async function createLearner(learnerData, photoFile) {
   const token = getAccessToken();
+  const formData = new FormData();
+  Object.entries(learnerData).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== "") formData.append(key, value);
+  });
+  if (photoFile) formData.append("photograph", photoFile, "learner-photo.jpg");
+
   const res = await fetch(`${API_BASE}/api/learners/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(learnerData),
+    body: formData,
   });
 
   if (!res.ok) {
