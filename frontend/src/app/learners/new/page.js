@@ -113,7 +113,7 @@ export default function NewLearnerPage() {
     setSaving(true);
     try {
       const learner = await createLearner(form, photoFile);
-      router.push(`/learners`);
+      router.push(`/learners/${learner.learner_id}`);
     } catch (err) {
       setError(err.message);
     } finally {
