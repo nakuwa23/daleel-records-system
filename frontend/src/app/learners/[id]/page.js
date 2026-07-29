@@ -50,8 +50,16 @@ export default function LearnerDetailPage() {
           <>
             <div className="bg-surface border border-border-warm rounded-2xl p-6 mb-6">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-teal-tint flex items-center justify-center text-teal-primary text-2xl font-semibold">
-                  {learner.full_name.charAt(0).toUpperCase()}
+                <div className="w-16 h-16 shrink-0 rounded-full bg-teal-tint flex items-center justify-center text-teal-primary text-2xl font-semibold overflow-hidden">
+                  {learner.photograph ? (
+                    <img
+                      src={learner.photograph}
+                      alt={learner.full_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    learner.full_name.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <div>
                   <h1 className="text-xl font-semibold text-ink">{learner.full_name}</h1>
