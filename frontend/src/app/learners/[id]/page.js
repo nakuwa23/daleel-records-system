@@ -103,7 +103,21 @@ export default function LearnerDetailPage() {
                           {" · "}{r.status}
                         </p>
                       </div>
-                      <span className="text-teal-primary text-sm">Present →</span>
+                      <span className="text-teal-primary text-sm inline-flex items-center gap-1">
+                        Present
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-4 h-4 shrink-0"
+                        >
+                          <path d="M4 10h12M12 5l5 5-5 5" />
+                        </svg>
+                      </span>
                     </button>
                   ))}
                 </div>
