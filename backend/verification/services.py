@@ -12,7 +12,7 @@ def get_public_key(issuer_id):
         return None
 
 
-def verify_presented_record(qr_payload, *, verifier=None, mode=VerificationMode.ONLINE):
+def verify_presented_record(qr_payload, *, verifier=None, mode=VerificationMode.ONLINE, request=None):
     record = qr_payload.get("record")
     signature = qr_payload.get("signature")
     issuer_id = qr_payload.get("issuerId")
@@ -35,6 +35,7 @@ def verify_presented_record(qr_payload, *, verifier=None, mode=VerificationMode.
     extra = {
         "record": record,
         "learner_name": _lookup_learner_name(record.get("learnerId")),
+        "learner_photo": _lookup_learner_photo(record.get("learnerId"), request),
         "issuer_name": _lookup_issuer_name(issuer_id),
     }
     return True, "Record is authentic and unaltered", extra
@@ -47,6 +48,19 @@ def _lookup_learner_name(learner_id):
         return Learner.objects.get(pk=learner_id).full_name
     except Learner.DoesNotExist:
         return None
+
+
+def _lookup_learner_photo(learner_id, request=None):
+    if not learner_id:
+        return None
+    try:
+        learner = Learner.objects.get(pk=learner_id)
+    except Learner.DoesNotExist:
+        return None
+    if not learner.photograph:
+        return None
+    url = learner.photograph.url
+    return request.build_absolute_uri(url) if request else url
 
 
 def _lookup_issuer_name(issuer_id):
