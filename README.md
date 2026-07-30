@@ -2,11 +2,11 @@
 
 Daleel (which means "proof" in Arabic) is an offline-aware academic
 records platform built for displaced and migrant learners. It lets
-authorized schools register learners without formal identity documents,
+authorized institutions register learners without formal identity documents,
 issue cryptographically signed academic records, and have those records
 verified by *any* receiving institution — online or completely offline —
 so a learner's academic history survives displacement even when the
-issuing school, its servers, or its country of origin cannot be reached.
+issuing institution, its servers, or its country of origin cannot be reached.
 
 ## Table of contents
 
@@ -23,8 +23,8 @@ issuing school, its servers, or its country of origin cannot be reached.
 ## Problem
 
 Learners displaced by conflict or migration routinely lose access to the
-schools that hold their academic records. A receiving school has no
-reliable way to confirm what a learner has already completed, and often
+institutions that hold their academic records. A receiving institution or a scholarhsip body has no
+reliable way to confirm what a learner has completed or achieved, and often
 no internet connectivity to check even if a central record existed.
 Daleel addresses this by putting the proof of authenticity *inside* the
 record itself (a digital signature), so verification never depends on

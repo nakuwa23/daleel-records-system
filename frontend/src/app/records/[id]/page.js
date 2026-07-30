@@ -50,7 +50,7 @@ export default function RecordPresentPage() {
 
         {record && qrPayload && (
           <div className="bg-surface border border-border-warm rounded-2xl p-4 sm:p-6 text-center">
-            <p className="text-sm text-slate mb-1">Show this code to the receiving school</p>
+            <p className="text-sm text-slate mb-1">Show this code to the receiving institution</p>
             <h1 className="text-lg font-semibold text-ink mb-6">
               {record.level_completed} · {record.academic_year}
             </h1>

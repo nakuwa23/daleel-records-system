@@ -126,7 +126,7 @@ export default function LandingPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-ink text-center mb-12">Why Daleel</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { t: "Survives displacement", d: "When a school is lost to conflict, the learner's record isn't — it travels with them." },
+              { t: "Survives displacement", d: "When an institution is lost to conflict, the learner's record isn't — it travels with them." },
               { t: "Tamper-proof", d: "Each record carries a cryptographic signature, so any alteration is immediately detectable." },
               { t: "Works offline", d: "Verification needs no internet — vital where connectivity is unreliable or absent." },
             ].map((f, i) => (
