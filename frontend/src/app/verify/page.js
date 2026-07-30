@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
-import { getAccessToken, verifyRecord } from "@/lib/api";
 import AppHeader from "@/components/AppHeader";
+import {
+  verifyRecordSmart,
+  refreshInstitutionDirectory,
+  flushOfflineVerificationQueue,
+  getQueueCount,
+  getInstitutionsSyncedAt,
+} from "@/lib/verification";
 
 const OUTCOME_STYLES = {
   PROMOTED: "bg-status-authentic-tint text-status-authentic",
@@ -14,22 +19,49 @@ const OUTCOME_STYLES = {
 };
 
 export default function VerifyPage() {
-  const router = useRouter();
   const [ready, setReady] = useState(false);
-  const [result, setResult] = useState(null);  
+  const [result, setResult] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState("");
   const [manualMode, setManualMode] = useState(false);
   const [manualText, setManualText] = useState("");
+  const [online, setOnline] = useState(true);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [directorySyncedAt, setDirectorySyncedAt] = useState(null);
   const scannerRef = useRef(null);
 
   useEffect(() => {
-    if (!getAccessToken()) {
-      router.replace("/login");
-      return;
-    }
     setReady(true);
-  }, [router]);
+    setOnline(navigator.onLine);
+    setDirectorySyncedAt(getInstitutionsSyncedAt());
+    getQueueCount().then(setPendingCount).catch(() => {});
+
+    if (navigator.onLine) {
+      refreshInstitutionDirectory()
+        .then(() => setDirectorySyncedAt(getInstitutionsSyncedAt()))
+        .catch(() => {});
+      trySync();
+    }
+
+    function handleOnline() {
+      setOnline(true);
+      refreshInstitutionDirectory()
+        .then(() => setDirectorySyncedAt(getInstitutionsSyncedAt()))
+        .catch(() => {});
+      trySync();
+    }
+    function handleOffline() {
+      setOnline(false);
+    }
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -38,6 +70,18 @@ export default function VerifyPage() {
       }
     };
   }, []);
+
+  async function trySync() {
+    setSyncing(true);
+    try {
+      await flushOfflineVerificationQueue();
+    } catch {
+      // stay queued — we'll retry on the next reconnect
+    } finally {
+      setPendingCount(await getQueueCount().catch(() => 0));
+      setSyncing(false);
+    }
+  }
 
   async function startScan() {
     setError("");
@@ -49,14 +93,14 @@ export default function VerifyPage() {
 
     try {
       await scanner.start(
-        { facingMode: "environment" },  
+        { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         async (decodedText) => {
           await scanner.stop().catch(() => {});
           setScanning(false);
           await handlePayload(decodedText);
         },
-        () => {} 
+        () => {}
       );
     } catch (err) {
       setError("Could not access camera. Try 'Enter code manually' below.");
@@ -74,8 +118,11 @@ export default function VerifyPage() {
   async function handlePayload(text) {
     try {
       const payload = JSON.parse(text);
-      const res = await verifyRecord(payload);
+      const res = await verifyRecordSmart(payload);
       setResult(res);
+      if (res.pendingSync) {
+        setPendingCount(await getQueueCount().catch(() => 0));
+      }
     } catch (err) {
       setError("That code isn't a valid Daleel record.");
     }
@@ -94,6 +141,30 @@ export default function VerifyPage() {
       <AppHeader />
 
       <main className="max-w-md mx-auto px-6 py-8">
+        {/* Connectivity + sync status */}
+        <div className="flex items-center justify-between gap-3 mb-4 text-xs">
+          <span
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium ${
+              online
+                ? "bg-status-authentic-tint text-status-authentic"
+                : "bg-status-offline-tint text-status-offline"
+            }`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${online ? "bg-status-authentic" : "bg-status-offline"}`} />
+            {online ? "Online" : "Offline — verifying from cached issuer keys"}
+          </span>
+
+          {pendingCount > 0 && (
+            <button
+              onClick={trySync}
+              disabled={!online || syncing}
+              className="text-slate hover:text-teal-primary disabled:opacity-50"
+            >
+              {syncing ? "Syncing…" : `${pendingCount} pending sync${online ? " · Sync now" : ""}`}
+            </button>
+          )}
+        </div>
+
         {/* Result display */}
         {result && (
           <div
@@ -118,6 +189,12 @@ export default function VerifyPage() {
               {result.authentic ? "Authentic record" : "Not authentic"}
             </h2>
             <p className="text-sm text-slate">{result.detail}</p>
+            {result.mode === "OFFLINE" && (
+              <p className="text-xs text-status-offline bg-status-offline-tint inline-block rounded-full px-2.5 py-1 mt-3">
+                Verified offline from cached issuer keys
+                {result.pendingSync ? " — will sync when back online" : ""}
+              </p>
+            )}
             <button
               onClick={() => { setResult(null); }}
               className="mt-4 text-sm text-teal-primary hover:text-teal-hover"
@@ -273,6 +350,13 @@ export default function VerifyPage() {
                   Use camera instead
                 </button>
               </>
+            )}
+
+            {!online && !directorySyncedAt && (
+              <p className="text-xs text-status-offline bg-status-offline-tint rounded-lg px-3 py-2 mt-3">
+                No issuer directory cached yet — connect once while online so this device can
+                verify records offline.
+              </p>
             )}
           </div>
         )}

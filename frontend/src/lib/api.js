@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+export const API_BASE = "http://127.0.0.1:8000";
 
 export async function login(username, password) {
   const res = await fetch(`${API_BASE}/api/auth/token/`, {
@@ -171,10 +171,27 @@ export async function verifyRecord(qrPayload) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({ qr_payload: qrPayload }),
   });
   if (!res.ok) throw new Error("Verification request failed");
+  return res.json();
+}
+
+// Re-submits QR payloads that were checked offline so they land in the
+// server-side audit log once connectivity returns. The server re-verifies
+// each signature itself rather than trusting the client's offline verdict.
+export async function syncOfflineVerifications(entries) {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE}/api/verify/sync/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ entries }),
+  });
+  if (!res.ok) throw new Error("Could not sync offline verifications");
   return res.json();
 }
