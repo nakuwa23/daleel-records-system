@@ -2,20 +2,27 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { logout, isAdmin } from "@/lib/api";
+import { logout, isAdmin, getRole } from "@/lib/api";
 
-const BASE_NAV_LINKS = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Learners", href: "/learners" },
-  { label: "Verify", href: "/verify" },
-];
+const NAV_LINKS = {
+  dashboard: { label: "Dashboard", href: "/dashboard" },
+  learners: { label: "Learners", href: "/learners" },
+  verify: { label: "Verify", href: "/verify" },
+  analytics: { label: "Analytics", href: "/analytics" },
+};
+
+// Which links each role sees
+const NAV_KEYS_BY_ROLE = {
+  ADMINISTRATOR: ["dashboard", "learners", "verify", "analytics"],
+  ISSUER_STAFF: ["dashboard", "learners"],
+  VERIFIER_STAFF: ["dashboard", "verify"],
+};
 
 export default function AppHeader({ onBack, actions }) {
   const pathname = usePathname();
   const router = useRouter();
-  const navLinks = isAdmin()
-    ? [...BASE_NAV_LINKS, { label: "Analytics", href: "/analytics" }]
-    : BASE_NAV_LINKS;
+  const role = isAdmin() ? "ADMINISTRATOR" : getRole();
+  const navLinks = (NAV_KEYS_BY_ROLE[role] || ["dashboard"]).map((key) => NAV_LINKS[key]);
 
   function handleLogout() {
     logout();
