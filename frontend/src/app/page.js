@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 
 export default function LandingPage() {
   return (
@@ -48,30 +49,45 @@ export default function LandingPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A3B2E]/75 via-[#0F6E56]/70 to-[#0A4A3A]/75" />
         <div className="relative max-w-4xl mx-auto px-6 py-24 md:py-32 text-center">
-          <span className="inline-block bg-amber-accent text-ink text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full mb-6">
+          <span
+            className="animate-fade-up inline-block bg-amber-accent text-ink text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full mb-6"
+            style={{ animationDelay: "0ms" }}
+          >
             PORTABLE · VERIFIABLE · OFFLINE
           </span>
-          <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight tracking-tight mb-2">
+          <h1
+            className="animate-fade-up text-4xl md:text-6xl font-semibold text-white leading-tight tracking-tight mb-2"
+            style={{ animationDelay: "100ms" }}
+          >
             Records that follow
           </h1>
-          <h1 className="text-4xl md:text-6xl font-semibold text-amber-accent leading-tight tracking-tight mb-6">
+          <h1
+            className="animate-fade-up text-4xl md:text-6xl font-semibold text-amber-accent leading-tight tracking-tight mb-6"
+            style={{ animationDelay: "150ms" }}
+          >
             the learner
           </h1>
-          <p className="text-base md:text-lg text-teal-tint max-w-xl mx-auto mb-9 leading-relaxed">
+          <p
+            className="animate-fade-up text-base md:text-lg text-teal-tint max-w-xl mx-auto mb-9 leading-relaxed"
+            style={{ animationDelay: "250ms" }}
+          >
             The academic records system for displaced and migrant learners. Issue tamper-proof
             records, carry them anywhere, and verify them at any institution — even with
             no internet.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div
+            className="animate-fade-up flex flex-col sm:flex-row gap-3 justify-center"
+            style={{ animationDelay: "350ms" }}
+          >
             <Link
               href="/login"
-              className="bg-amber-accent text-ink font-semibold px-7 py-3.5 rounded-lg hover:bg-amber-hover transition-colors"
+              className="bg-amber-accent text-ink font-semibold px-7 py-3.5 rounded-lg hover:bg-amber-hover hover:-translate-y-0.5 transition-all"
             >
               Get started
             </Link>
             <a
               href="#how"
-              className="bg-white/10 border border-white/30 text-white font-medium px-7 py-3.5 rounded-lg hover:bg-white/20 transition-colors"
+              className="bg-white/10 border border-white/30 text-white font-medium px-7 py-3.5 rounded-lg hover:bg-white/20 hover:-translate-y-0.5 transition-all"
             >
               See how it works
             </a>
@@ -90,14 +106,16 @@ export default function LandingPage() {
             { n: "1", t: "Register", d: "Create a photo-based learner profile — no formal ID required." },
             { n: "2", t: "Issue & sign", d: "Records are cryptographically signed, making tampering detectable." },
             { n: "3", t: "Verify anywhere", d: "Any institution confirms authenticity in seconds, online or offline." },
-          ].map((s) => (
-            <div key={s.n} className="bg-surface border border-border-warm rounded-2xl p-6">
-              <div className="w-10 h-10 rounded-full bg-teal-tint text-teal-primary font-semibold flex items-center justify-center mb-4">
-                {s.n}
+          ].map((s, i) => (
+            <Reveal key={s.n} delay={i * 100}>
+              <div className="bg-surface border border-border-warm rounded-2xl p-6 hover:-translate-y-1 hover:shadow-md transition-all">
+                <div className="w-10 h-10 rounded-full bg-teal-tint text-teal-primary font-semibold flex items-center justify-center mb-4">
+                  {s.n}
+                </div>
+                <h3 className="text-lg font-semibold text-ink mb-2">{s.t}</h3>
+                <p className="text-sm text-slate leading-relaxed">{s.d}</p>
               </div>
-              <h3 className="text-lg font-semibold text-ink mb-2">{s.t}</h3>
-              <p className="text-sm text-slate leading-relaxed">{s.d}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -111,11 +129,11 @@ export default function LandingPage() {
               { t: "Survives displacement", d: "When a school is lost to conflict, the learner's record isn't — it travels with them." },
               { t: "Tamper-proof", d: "Each record carries a cryptographic signature, so any alteration is immediately detectable." },
               { t: "Works offline", d: "Verification needs no internet — vital where connectivity is unreliable or absent." },
-            ].map((f) => (
-              <div key={f.t}>
+            ].map((f, i) => (
+              <Reveal key={f.t} delay={i * 100}>
                 <h3 className="text-lg font-semibold text-ink mb-2">{f.t}</h3>
                 <p className="text-sm text-slate leading-relaxed">{f.d}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -123,18 +141,20 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold text-ink mb-4">
-          Give every learner a record that lasts
-        </h2>
-        <p className="text-slate mb-8 max-w-lg mx-auto">
-          Start issuing verifiable academic records that follow the learner, wherever they go.
-        </p>
-        <Link
-          href="/login"
-          className="inline-block bg-teal-primary text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-teal-hover transition-colors"
-        >
-          Get started
-        </Link>
+        <Reveal>
+          <h2 className="text-2xl md:text-3xl font-semibold text-ink mb-4">
+            Give every learner a record that lasts
+          </h2>
+          <p className="text-slate mb-8 max-w-lg mx-auto">
+            Start issuing verifiable academic records that follow the learner, wherever they go.
+          </p>
+          <Link
+            href="/login"
+            className="inline-block bg-teal-primary text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-teal-hover hover:-translate-y-0.5 transition-all"
+          >
+            Get started
+          </Link>
+        </Reveal>
       </section>
 
       {/* Footer */}
