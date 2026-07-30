@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from accounts.models import Role
 from learners.models import Learner
 from .models import AcademicRecord
 from .serializers import IssueRecordSerializer, AcademicRecordSerializer
@@ -13,6 +14,12 @@ from .services import issue_signed_record, build_qr_payload
 @permission_classes([IsAuthenticated])
 def issue_record(request):
     """Issue and sign an academic record."""
+    if request.user.role not in (Role.ISSUER_STAFF, Role.ADMINISTRATOR) and not request.user.is_superuser:
+        return Response(
+            {"detail": "Only issuer staff or administrators can issue records."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
     serializer = IssueRecordSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data

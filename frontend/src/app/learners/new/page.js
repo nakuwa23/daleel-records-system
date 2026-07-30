@@ -19,6 +19,7 @@ export default function NewLearnerPage() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [ageMode, setAgeMode] = useState("estimate");
+  const [duplicateWarning, setDuplicateWarning] = useState(null);
 
   const [photoMode, setPhotoMode] = useState("live");
   const [photoFile, setPhotoFile] = useState(null);
@@ -113,12 +114,55 @@ export default function NewLearnerPage() {
     setSaving(true);
     try {
       const learner = await createLearner(form, photoFile);
-      router.push(`/learners/${learner.learner_id}`);
+      if (learner.potential_duplicates?.length > 0) {
+        setDuplicateWarning(learner);
+      } else {
+        router.push(`/learners/${learner.learner_id}`);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
       setSaving(false);
     }
+  }
+
+  if (ready && duplicateWarning) {
+    return (
+      <div className="min-h-screen bg-sand">
+        <AppHeader />
+        <main className="max-w-lg mx-auto px-6 py-8">
+          <div className="bg-status-offline-tint border border-status-offline rounded-2xl p-6">
+            <h2 className="text-lg font-semibold text-status-offline mb-2">
+              Possible existing profile{duplicateWarning.potential_duplicates.length > 1 ? "s" : ""} found
+            </h2>
+            <p className="text-sm text-slate mb-4">
+              {duplicateWarning.full_name} was registered, but the system found{" "}
+              {duplicateWarning.potential_duplicates.length === 1 ? "another profile" : "other profiles"}{" "}
+              with a matching name and place of origin. Check whether this learner is already registered
+              before using the new profile.
+            </p>
+            <div className="space-y-2 mb-5">
+              {duplicateWarning.potential_duplicates.map((d) => (
+                <button
+                  key={d.learner_id}
+                  onClick={() => router.push(`/learners/${d.learner_id}`)}
+                  className="w-full text-left bg-surface border border-border-warm rounded-lg px-4 py-2.5 hover:border-teal-primary transition-colors"
+                >
+                  <p className="font-medium text-ink">{d.full_name}</p>
+                  <p className="text-xs text-slate">View this existing profile</p>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => router.push(`/learners/${duplicateWarning.learner_id}`)}
+              className="w-full bg-teal-primary text-white font-medium py-3 rounded-lg hover:bg-teal-hover transition-colors"
+            >
+              This is a different learner — continue to new profile
+            </button>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   if (!ready) return null;
